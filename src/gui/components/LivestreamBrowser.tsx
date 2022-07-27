@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StreamListView } from "./components/StreamListView"
+import { StreamListView } from "./StreamListView"
 
 export class LivestreamBrowser extends React.Component {
     render(): React.ReactNode {

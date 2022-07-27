@@ -1,6 +1,28 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client'
-import { LivestreamBrowser } from "./LivestreamBrowser"
+import { LivestreamBrowser } from "./components/LivestreamBrowser"
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+
+const theme = createTheme({
+    palette: {
+        mode: 'dark',
+        primary: {
+            main: '#d1c4e9',
+            contrastText: '#311b92',
+        },
+        secondary: {
+            main: '#f50057',
+        },
+        background: {
+            default: '#7c4dff',
+            paper: '#4527a0',
+        },
+        text: {
+            primary: 'rgba(255,255,255,0.87)',
+        },
+    },
+});
 
 class App {
 
@@ -20,7 +42,10 @@ class App {
         const root = ReactDOM.createRoot(rootElement);
         root.render(
             <React.StrictMode>
-                <LivestreamBrowser />
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <LivestreamBrowser />
+                </ThemeProvider>
             </React.StrictMode>
         );
     };
