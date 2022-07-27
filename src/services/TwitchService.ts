@@ -1,18 +1,12 @@
 
 import { Config } from '../core/Config'
 
-declare global {
-    interface Window {
-        api: {
-            send: (channel: string, ...arg: any) => void;
-            getConfig: () => Config;
-        }
-    }
-}
-
 export class TwitchService {
+    readonly config: Config;
 
-    readonly config = window.api.getConfig();
+    constructor(config: Config) {
+        this.config = config;
+    }
 
     readonly baseUrl = "https://api.twitch.tv/";
 

@@ -1,8 +1,20 @@
 
 import * as React from 'react';
-import { DataGrid, GridRowsProp, GridColDef, GridRowParams, GridRenderCellParams } from '@mui/x-data-grid';
-import { openStream } from "../../services/ProcessService";
+import { DataGrid, GridColDef, GridRowParams, GridRenderCellParams } from '@mui/x-data-grid';
+import { ProcessService } from "../../services/ProcessService";
 import { TwitchService, LiveChannel } from "../../services/TwitchService";
+import { Config } from '../../core/Config'
+
+declare global {
+    interface Window {
+        api: {
+            send: (channel: string, ...arg: any) => void;
+            getConfig: () => Config;
+        }
+    }
+}
+
+const config = window.api.getConfig();
 
 const columns: GridColDef[] = [
     { field: 'col1', headerName: 'Channel', width: 150, flex: 2 },
@@ -20,10 +32,17 @@ const columns: GridColDef[] = [
 
 export class StreamListView extends React.Component<unknown, { rows: any }> {
 
+    readonly processService: ProcessService;
+    readonly twitchService: TwitchService;
+
     constructor(props: unknown) {
         super(props);
 
+        this.processService = new ProcessService(config);
+        this.twitchService = new TwitchService(config);
+
         this.refreshLivestreams = this.refreshLivestreams.bind(this);
+        this.onRowClick = this.onRowClick.bind(this);
 
         this.state = {
             rows: []
@@ -36,7 +55,7 @@ export class StreamListView extends React.Component<unknown, { rows: any }> {
 
     onRowClick(params: GridRowParams) {
         console.log("Sending command to open stream channel: " + params.row["col1"]);
-        openStream(params.row["col1"]);
+        this.processService.openStream(params.row["col1"]);
     }
 
     async refreshLivestreams(): Promise<void> {
@@ -44,11 +63,11 @@ export class StreamListView extends React.Component<unknown, { rows: any }> {
             rows: []
         });
 
-        const result = await new TwitchService().getLiveChannels();
+        const result = await this.twitchService.getLiveChannels();
 
         let counter = 1;
         const newResult = result.map((x: LiveChannel) => {
-            return { id: counter++, col1: `${x.name}`, col2: x.title, col3: x.game, col4: x.viewers, col5: x.runTime, col6: x.bitmapUrl }
+            return { id: counter++, col1: x.name, col2: x.title, col3: x.game, col4: x.viewers, col5: x.runTime, col6: x.bitmapUrl }
         });
 
         this.setState({
