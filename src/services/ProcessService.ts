@@ -10,7 +10,7 @@ export class ProcessService {
     }
 
     openStream(channel: string): void {
-        window.api.send("openProcess", '"' + this.config.streamUtilityPath + '" https://www.twitch.tv/' + channel +
+        window.api.send("openProcess", '"' + this.config.streamUtilityPath + '" ' + channel +
             ' 1080p60,900p60,720p60,best,1080p30,900p,720p30,540p30,480p30,360p30,240p30,160p30 --config "' + configurationFile + '"');
     }
 }

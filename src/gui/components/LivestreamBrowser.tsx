@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { StreamListView } from "./StreamListView"
+import { StreamCardView } from "./StreamCardView"
 
 export class LivestreamBrowser extends React.Component {
     render(): React.ReactNode {
         return (
-            <div>
-                <StreamListView />
-            </div>
+                <StreamCardView />
         );
     }
 }
