@@ -11,43 +11,106 @@ declare global {
         api: {
             send: (channel: string, ...arg: any) => void;
             getConfig: () => Config;
+            setConfig: (newConfig: Config) => void;
         }
     }
 }
 
 const config = window.api.getConfig();
+const saveConfig = window.api.setConfig;
 
-export class Settings extends React.Component {
+export class Settings extends React.Component<unknown, {
+    twitchClientId: string, twitchAccessToken: string, twitchUserId: string, twitchUserName: string, streamUtilityPath: string
+}> {
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            twitchClientId: config.twitchClientId,
+            twitchAccessToken: config.twitchAccessToken,
+            twitchUserId: config.twitchUserId,
+            twitchUserName: config.twitchUserName,
+            streamUtilityPath: config.streamUtilityPath,
+        };
+        this.saveChanges = this.saveChanges.bind(this);
+    }
 
     saveChanges(): void {
-        console.log("Will save data when implemented");
+        try {
+            config.twitchClientId = this.state.twitchClientId;
+            config.twitchAccessToken = this.state.twitchAccessToken;
+            config.twitchUserId = this.state.twitchUserId;
+            config.twitchUserName = this.state.twitchUserName;
+            config.streamUtilityPath = this.state.streamUtilityPath;
+
+            saveConfig(config);
+        } catch (error) {
+            console.log(error);
+        }
     }
+
+    async authenticate(): Promise<void> {
+        console.log("Authentication not implemented");
+    }
+
+    handleChangeClientId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchClientId: event.currentTarget.value }); }
+    handleChangeAccessToken = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchAccessToken: event.currentTarget.value }); }
+    handleChangeUserId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchUserId: event.currentTarget.value }); }
+    handleChangeUserName = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchUserName: event.currentTarget.value }); }
+    handleChangeStreamUtilityPath = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ streamUtilityPath: event.currentTarget.value }); }
 
     render(): React.ReactNode {
         return (
             <div style={{ width: 'auto', height: '100%' }}>
                 <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
-                    {Array.from(Object.keys(config)).map(x => (
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label={x}
-                            defaultValue={Reflect.get(config, x)}
-                        />
-                    ))}
+                    <TextField
+                        required
+                        id="outlined-required"
+                        label="Twitch client ID"
+                        defaultValue={this.state.twitchClientId}
+                        onChange={this.handleChangeClientId} />
+                    <TextField
+                        required
+                        id="outlined-required"
+                        label="Twitch access token"
+                        defaultValue={this.state.twitchAccessToken}
+                        onChange={this.handleChangeAccessToken} />
+                    <TextField
+                        required
+                        id="outlined-required"
+                        label="Twitch user ID (numbers)"
+                        defaultValue={this.state.twitchUserId}
+                        onChange={this.handleChangeUserId} />
+                    <TextField
+                        required
+                        id="outlined-required"
+                        label="Twitch user name"
+                        defaultValue={this.state.twitchUserName}
+                        onChange={this.handleChangeUserName} />
+                    <TextField
+                        required
+                        id="outlined-required"
+                        label="Streamlink path"
+                        defaultValue={this.state.streamUtilityPath}
+                        onChange={this.handleChangeStreamUtilityPath} />
                 </Stack>
 
-                <Stack direction="row" alignItems="center" gap={1}>
-                    <Link to="/" onClick={this.saveChanges}>
-                        <Button variant="contained">
-                            <SaveIcon />
-                        </Button>
-                    </Link>
-                    <Link to="/">
-                        <Button variant="contained">
-                            <CancelIcon />
-                        </Button>
-                    </Link>
+                <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
+                    <Button variant="contained" onClick={this.authenticate}>
+                        Authenticate to Twitch
+                    </Button>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                        <Link to="/" onClick={this.saveChanges}>
+                            <Button variant="contained">
+                                <SaveIcon />
+                            </Button>
+                        </Link>
+                        <Link to="/">
+                            <Button variant="contained">
+                                <CancelIcon />
+                            </Button>
+                        </Link>
+                    </Stack>
                 </Stack>
             </div>
         )

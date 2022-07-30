@@ -13,6 +13,7 @@ declare global {
         api: {
             send: (channel: string, ...arg: any) => void;
             getConfig: () => Config;
+            setConfig: (newConfig: Config) => void;
         }
     }
 }

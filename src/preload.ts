@@ -18,6 +18,9 @@ const api: any = {
     },
     getConfig: () => {
         return config.getAll as Config;
+    },
+    setConfig: (newConfig: Config) => {
+        return config.setAndWriteSync(newConfig);
     }
 };
 
