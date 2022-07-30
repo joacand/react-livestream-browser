@@ -4,7 +4,7 @@ import { StreamCardView } from "./StreamCardView"
 export class LivestreamBrowser extends React.Component {
     render(): React.ReactNode {
         return (
-                <StreamCardView />
+            <StreamCardView />
         );
     }
 }

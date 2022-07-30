@@ -77,7 +77,9 @@ const ElectronApp = {
       webPreferences: {
         preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       },
+      icon: `${__dirname}/../assets/livestreambrowsericon.png`,
     });
+    this.mainWindow.removeMenu();
 
     this.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
     this.mainWindow.webContents.openDevTools();

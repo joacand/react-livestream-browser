@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import { LivestreamBrowser } from "./components/LivestreamBrowser"
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Settings } from './components/Settings';
 
 const theme = createTheme({
     palette: {
@@ -44,7 +46,14 @@ class App {
             <React.StrictMode>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
-                    <LivestreamBrowser />
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<LivestreamBrowser />}>
+                                <Route path="*" />
+                            </Route>
+                            <Route path="settings" element={<Settings />} />
+                        </Routes>
+                    </BrowserRouter>
                 </ThemeProvider>
             </React.StrictMode>
         );

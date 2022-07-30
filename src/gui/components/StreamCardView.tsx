@@ -1,12 +1,12 @@
 
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRowParams, GridRenderCellParams } from '@mui/x-data-grid';
 import { ProcessService } from "../../services/ProcessService";
 import { TwitchService, LiveChannel } from "../../services/TwitchService";
 import { Config } from '../../core/Config'
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { alpha, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, gridClasses, Stack, styled, Typography } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 declare global {
     interface Window {
@@ -75,11 +75,6 @@ export class StreamCardView extends React.Component<unknown, { rows: any, channe
         });
     }
 
-    openSettings(): void {
-        console.log("test");
-
-    }
-
     calculateRuntime(startedAt: string): string {
         const elapsedTime = new Date().getTime().valueOf() - +(Date.parse(startedAt).valueOf());
         const hoursDecimal = elapsedTime / (1000 * 60 * 60);
@@ -91,15 +86,15 @@ export class StreamCardView extends React.Component<unknown, { rows: any, channe
     render(): React.ReactNode {
         return (
             <div style={{ width: 'auto', height: '100%' }}>
-                <div style={{ marginBottom: '10px', width: 'auto', height: '100%' }}>
-                    <Grid container rowSpacing={1} columnSpacing={1} style={{ backgroundColor: '#4527a0', height: '100%' }}>
+                <div style={{ marginBottom: '10px', width: 'auto', height: 'auto' }}>
+                    <Grid container rowSpacing={1} columnSpacing={1} style={{ backgroundColor: '#4527a0', height: 'auto', paddingBottom: '10px' }}>
                         {Array.from(this.state.channels).map((x, index) => (
                             <Grid item key={index}>
-                                <Card sx={{ minWidth: 345, maxWidth: 345 }}>
+                                <Card sx={{ minWidth: 345, maxWidth: 345, minHeight: 290 }}>
                                     <CardActionArea onClick={() => this.onCardClick(x)}>
                                         <CardMedia
                                             component="img"
-                                            height="140"
+                                            height="150"
                                             image={x.bitmapUrl}
                                             alt="thumbnail"
                                         />
@@ -125,9 +120,11 @@ export class StreamCardView extends React.Component<unknown, { rows: any, channe
                     <Button variant="contained" onClick={this.refreshLivestreams}>
                         <RefreshIcon />
                     </Button>
-                    <Button variant="contained" onClick={this.openSettings}>
-                        <SettingsIcon />
-                    </Button>
+                    <Link to="/settings">
+                        <Button variant="contained">
+                            <SettingsIcon />
+                        </Button>
+                    </Link>
                 </Stack>
             </div>
         )
