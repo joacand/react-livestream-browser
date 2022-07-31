@@ -1,27 +1,31 @@
 
+import { LiveChannel } from '../core/LiveChannel';
 import { Config } from '../core/Config'
 
 export class TwitchService {
-    readonly config: Config;
+    readonly getConfig: () => Config;
 
-    constructor(config: Config) {
-        this.config = config;
+    constructor(getConfig: () => Config) {
+        this.getConfig = getConfig;
     }
 
     readonly baseUrl = "https://api.twitch.tv/";
 
     async getLiveChannels(): Promise<LiveChannel[]> {
 
+        const config = this.getConfig();
+
         console.log("Fetching live channels from: " + this.baseUrl);
 
-        const url = this.baseUrl + `helix/streams/followed?stream_type=live&user_id=${this.config.twitchUserId}`;
+        const url = this.baseUrl + `helix/streams/followed?stream_type=live&user_id=${config.twitchUserId}`;
+        console.log("Using bearer: " + config.twitchAccessToken);
 
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Accept': 'application/vnd.twitchtv.v5+json',
-                'Client-ID': `${this.config.twitchClientId}`,
-                'Authorization': `Bearer ${this.config.twitchAccessToken}`
+                'Client-ID': `${config.twitchClientId}`,
+                'Authorization': `Bearer ${config.twitchAccessToken}`
             }
         });
 
@@ -39,17 +43,6 @@ export class TwitchService {
             };
         });
     }
-}
-
-export interface LiveChannel {
-    name: string
-    title: string
-    game: string
-    viewers: string
-    runTime: string
-    bitmapUrl: string
-    url: string
-    channelId: string
 }
 
 interface TwitchStreamsRootResponse {

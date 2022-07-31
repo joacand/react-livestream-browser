@@ -49,10 +49,6 @@ export class Settings extends React.Component<unknown, {
         }
     }
 
-    async authenticate(): Promise<void> {
-        console.log("Authentication not implemented");
-    }
-
     handleChangeClientId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchClientId: event.currentTarget.value }); }
     handleChangeAccessToken = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchAccessToken: event.currentTarget.value }); }
     handleChangeUserId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchUserId: event.currentTarget.value }); }
@@ -96,9 +92,11 @@ export class Settings extends React.Component<unknown, {
                 </Stack>
 
                 <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
-                    <Button variant="contained" onClick={this.authenticate}>
-                        Authenticate to Twitch
-                    </Button>
+                    <Link to="/oauthTwitch">
+                        <Button variant="contained">
+                            Authenticate to Twitch
+                        </Button>
+                    </Link>
                     <Stack direction="row" alignItems="center" gap={1}>
                         <Link to="/" onClick={this.saveChanges}>
                             <Button variant="contained">

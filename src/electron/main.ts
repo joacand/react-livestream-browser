@@ -81,6 +81,21 @@ const ElectronApp = {
     });
     this.mainWindow.removeMenu();
 
+    this.mainWindow.webContents.on('will-navigate', (e: Event, n: string) => {
+      if (n.includes("localhost/#access_token")) {
+        const splits = n.split("#access_token=")[1].split("&id_token=");
+        const accessToken = splits[0];
+        const idToken = splits[1].split("&scope=")[0];
+
+        config.set("twitchAccessToken", accessToken);
+        config.set("twitchIdToken", idToken);
+        config.writeSync();
+        
+        e.preventDefault();
+        this.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+      }
+    });
+
     this.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
     this.mainWindow.webContents.openDevTools();
   },

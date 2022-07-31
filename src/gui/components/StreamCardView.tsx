@@ -1,12 +1,13 @@
 
 import * as React from 'react';
 import { ProcessService } from "../../services/ProcessService";
-import { TwitchService, LiveChannel } from "../../services/TwitchService";
+import { TwitchService } from "../../services/TwitchService";
 import { Config } from '../../core/Config'
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { LiveChannel } from '../../core/LiveChannel';
 
 declare global {
     interface Window {
@@ -29,8 +30,8 @@ export class StreamCardView extends React.Component<unknown, { rows: any, channe
     constructor(props: unknown) {
         super(props);
 
-        this.processService = new ProcessService(config);
-        this.twitchService = new TwitchService(config);
+        this.processService = new ProcessService(window.api.getConfig);
+        this.twitchService = new TwitchService(window.api.getConfig);
 
         this.refreshLivestreams = this.refreshLivestreams.bind(this);
         this.onCardClick = this.onCardClick.bind(this);
