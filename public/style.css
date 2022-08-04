@@ -5,6 +5,6 @@ body {
   padding: 1rem;
 }
 
-#root {
+.app {
   height: 90vh;
 }

@@ -1,28 +1,13 @@
-
-import * as React from 'react';
-import { ProcessService } from "../../services/ProcessService";
-import { TwitchService } from "../../services/TwitchService";
-import { Config } from '../../core/Config'
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Button, Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardMedia, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { LiveChannel } from '../../core/LiveChannel';
+import { LiveChannel } from '../core/LiveChannel';
+import { ProcessService } from '../services/ProcessService';
+import { TwitchService } from '../services/TwitchService';
 
-declare global {
-    interface Window {
-        api: {
-            send: (channel: string, ...arg: any) => void;
-            getConfig: () => Config;
-            setConfig: (newConfig: Config) => void;
-        }
-    }
-}
-
-const config = window.api.getConfig();
-
-export class StreamCardView extends React.Component<unknown, { rows: any, channels: LiveChannel[] }> {
-
+export class StreamCardView extends React.Component<unknown, { channels: LiveChannel[], quality: number }> {
     readonly processService: ProcessService;
     readonly twitchService: TwitchService;
     openEnabled = true;
@@ -30,50 +15,53 @@ export class StreamCardView extends React.Component<unknown, { rows: any, channe
     constructor(props: unknown) {
         super(props);
 
-        this.processService = new ProcessService(window.api.getConfig);
-        this.twitchService = new TwitchService(window.api.getConfig);
+        this.processService = new ProcessService(window.ipcAPI.api.getConfig);
+        this.twitchService = new TwitchService(window.ipcAPI.api.getConfig);
 
         this.refreshLivestreams = this.refreshLivestreams.bind(this);
         this.onCardClick = this.onCardClick.bind(this);
+        this.qualityChanged = this.qualityChanged.bind(this);
 
         this.state = {
-            rows: [],
-            channels: []
-        }
+            channels: [],
+            quality: 1,
+        };
     }
 
-    componentDidMount(): void {
-        this.refreshLivestreams();
+    async componentDidMount(): Promise<void> {
+        await this.refreshLivestreams();
     }
 
     onCardClick(channel: LiveChannel) {
         if (this.openEnabled) {
             this.openEnabled = false;
-            console.log("Sending command to open stream channel: " + channel.url);
-            this.processService.openStream(channel.url);
+            console.log(`Sending command to open stream channel: ${channel.url}`);
+            this.processService.openStream(channel.url, this.state.quality);
             setTimeout(() => this.openEnabled = true, 2000);
         }
     }
 
     async refreshLivestreams(): Promise<void> {
         this.setState({
-            rows: [],
-            channels: []
+            channels: [],
         });
 
         const result = await this.twitchService.getLiveChannels();
 
         let counter = 1;
-        const newResult = result.map((x: LiveChannel) => {
-            return {
-                id: counter++, col1: x.name, col2: x.title, col3: x.game, col4: x.viewers,
-                col5: this.calculateRuntime(x.runTime), col6: x.bitmapUrl
-            }
-        });
+        const newResult = result.map((x: LiveChannel) => ({
+            // eslint-disable-next-line no-plusplus
+            id: counter++,
+            col1: x.name,
+            col2: x.title,
+            col3: x.game,
+            col4: x.viewers,
+            col5: this.calculateRuntime(x.runTime),
+            col6: x.bitmapUrl,
+        }));
 
         this.setState({
-            rows: newResult,
-            channels: result
+            channels: result,
         });
     }
 
@@ -82,7 +70,11 @@ export class StreamCardView extends React.Component<unknown, { rows: any, channe
         const hoursDecimal = elapsedTime / (1000 * 60 * 60);
         const runTime = new Date(0, 0);
         runTime.setMinutes(+hoursDecimal * 60);
-        return runTime.getHours() + "h " + runTime.getMinutes() + "m";
+        return `${runTime.getHours()}h ${runTime.getMinutes()}m`;
+    }
+
+    qualityChanged(e: SelectChangeEvent<number>, _n: React.ReactNode): void {
+        this.setState({ quality: e.target.value as number });
     }
 
     render(): React.ReactNode {
@@ -118,17 +110,33 @@ export class StreamCardView extends React.Component<unknown, { rows: any, channe
                     </Grid>
                 </div>
 
-                <Stack direction="row" alignItems="center" gap={1}>
-                    <Button variant="contained" onClick={this.refreshLivestreams}>
-                        <RefreshIcon />
-                    </Button>
-                    <Link to="/settings">
-                        <Button variant="contained">
-                            <SettingsIcon />
+                <Stack direction="column" alignItems="left" gap={1} style={{ maxWidth: '120px' }}>
+                    <FormControl variant="standard">
+                        <InputLabel id="demo-simple-select-standard-label">Quality</InputLabel>
+                        <Select
+                            labelId="quality-select-label"
+                            id="quality-select"
+                            value={this.state.quality}
+                            label="Quality"
+                            defaultValue={1}
+                            onChange={this.qualityChanged}>
+                            <MenuItem value={1}>High</MenuItem>
+                            <MenuItem value={2}>Medium</MenuItem>
+                            <MenuItem value={3}>Low</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Stack direction="row" alignItems="center" gap={1}>
+                        <Button variant="contained" onClick={this.refreshLivestreams}>
+                            <RefreshIcon />
                         </Button>
-                    </Link>
+                        <Link to="/settings">
+                            <Button variant="contained">
+                                <SettingsIcon />
+                            </Button>
+                        </Link>
+                    </Stack>
                 </Stack>
-            </div>
+            </div >
         )
     }
 }
