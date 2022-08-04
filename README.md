@@ -8,6 +8,12 @@ Written in TypeScript and React and built with Electron.
 
 ## Running development
 
+In terminal #1:
+`npm run dev`
+
+In terminal #2:
 `npm start`
 
-Restarting application in console: `rs`
+## Deployment
+
+`npm run prod` followed by `npm run build:{os}`
