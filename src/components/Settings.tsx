@@ -1,28 +1,18 @@
 
-import * as React from 'react';
-import { Config } from '../../core/Config'
-import { Button, Stack, TextField } from '@mui/material';
-import { Link } from 'react-router-dom';
-import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import SaveIcon from '@mui/icons-material/Save';
+import { Button, Stack, TextField } from '@mui/material';
+import { Config } from '_/core/Config';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 
-declare global {
-    interface Window {
-        api: {
-            send: (channel: string, ...arg: any) => void;
-            getConfig: () => Config;
-            setConfig: (newConfig: Config) => void;
-        }
-    }
-}
-
-const config = window.api.getConfig();
-const saveConfig = window.api.setConfig;
+const config: Config = window.ipcAPI.api.getConfig();
+const saveConfig = window.ipcAPI.api.setConfig;
 
 export class Settings extends React.Component<unknown, {
-    twitchClientId: string, twitchAccessToken: string, twitchUserId: string, twitchUserName: string, streamUtilityPath: string
+    twitchClientId: string, twitchAccessToken: string, twitchUserId: string,
+    twitchUserName: string, streamUtilityPath: string
 }> {
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -34,6 +24,12 @@ export class Settings extends React.Component<unknown, {
         };
         this.saveChanges = this.saveChanges.bind(this);
     }
+
+    handleChangeClientId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchClientId: event.currentTarget.value }); }
+    handleChangeAccessToken = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchAccessToken: event.currentTarget.value }); }
+    handleChangeUserId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchUserId: event.currentTarget.value }); }
+    handleChangeUserName = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchUserName: event.currentTarget.value }); }
+    handleChangeStreamUtilityPath = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ streamUtilityPath: event.currentTarget.value }); }
 
     saveChanges(): void {
         try {
@@ -48,13 +44,6 @@ export class Settings extends React.Component<unknown, {
             console.log(error);
         }
     }
-
-    handleChangeClientId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchClientId: event.currentTarget.value }); }
-    handleChangeAccessToken = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchAccessToken: event.currentTarget.value }); }
-    handleChangeUserId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchUserId: event.currentTarget.value }); }
-    handleChangeUserName = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchUserName: event.currentTarget.value }); }
-    handleChangeStreamUtilityPath = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ streamUtilityPath: event.currentTarget.value }); }
-
     render(): React.ReactNode {
         return (
             <div style={{ width: 'auto', height: '100%' }}>

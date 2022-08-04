@@ -1,1 +1,1 @@
-declare module '*.rc';
+declare module '*.txt';
