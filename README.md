@@ -6,6 +6,10 @@ Currently only integrated with Twitch.TV, but additions for Youtube should be po
 
 Written in TypeScript and React and built with Electron.
 
+## Screenshot
+
+![alt tag](https://i.imgur.com/ablZcfY.png "Example usage of the application")
+
 ## Running development
 
 In terminal #1:

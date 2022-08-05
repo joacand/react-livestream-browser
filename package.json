@@ -21,7 +21,8 @@
     "productName": "Livestream Browser",
     "directories": {
       "app": "./dist/",
-      "output": "./out/"
+      "output": "./out/",
+      "buildResources": "./buildResources/"
     },
     "mac": {
       "target": {
