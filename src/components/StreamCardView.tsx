@@ -1,6 +1,8 @@
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Button, Card, CardActionArea, CardContent, CardMedia, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography } from '@mui/material';
+import {
+    Button, Card, CardActionArea, CardContent, CardMedia, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography,
+} from '@mui/material';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { LiveChannel } from '../core/LiveChannel';
@@ -48,18 +50,6 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
 
         const result = await this.twitchService.getLiveChannels();
 
-        let counter = 1;
-        const newResult = result.map((x: LiveChannel) => ({
-            // eslint-disable-next-line no-plusplus
-            id: counter++,
-            col1: x.name,
-            col2: x.title,
-            col3: x.game,
-            col4: x.viewers,
-            col5: this.calculateRuntime(x.runTime),
-            col6: x.bitmapUrl,
-        }));
-
         this.setState({
             channels: result,
         });
@@ -79,8 +69,8 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
 
     render(): React.ReactNode {
         return (
-            <div style={{ width: 'auto', height: '100%' }}>
-                <div style={{ marginBottom: '10px', width: 'auto', height: 'auto' }}>
+            <div style={{ width: '100%', height: '100%', display: 'flex', flexFlow: 'column' }}>
+                <div style={{ marginBottom: '10px', height: '100%' }}>
                     <Grid container rowSpacing={1} columnSpacing={1} style={{ backgroundColor: '#4527a0', height: 'auto', paddingBottom: '10px' }}>
                         {Array.from(this.state.channels).map((x, index) => (
                             <Grid item key={index}>
@@ -110,11 +100,18 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
                     </Grid>
                 </div>
 
-                <Stack direction="column" alignItems="left" gap={1} style={{ maxWidth: '120px' }}>
+                <Stack direction="row" alignItems="center" gap={1}>
+                    <Button variant="contained" onClick={this.refreshLivestreams}>
+                        <RefreshIcon />
+                    </Button>
+                    <Link to="/settings">
+                        <Button variant="contained">
+                            <SettingsIcon />
+                        </Button>
+                    </Link>
                     <FormControl variant="standard">
-                        <InputLabel id="demo-simple-select-standard-label">Quality</InputLabel>
+                        <InputLabel>Quality</InputLabel>
                         <Select
-                            labelId="quality-select-label"
                             id="quality-select"
                             value={this.state.quality}
                             label="Quality"
@@ -125,18 +122,8 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
                             <MenuItem value={3}>Low</MenuItem>
                         </Select>
                     </FormControl>
-                    <Stack direction="row" alignItems="center" gap={1}>
-                        <Button variant="contained" onClick={this.refreshLivestreams}>
-                            <RefreshIcon />
-                        </Button>
-                        <Link to="/settings">
-                            <Button variant="contained">
-                                <SettingsIcon />
-                            </Button>
-                        </Link>
-                    </Stack>
                 </Stack>
-            </div >
-        )
+            </div>
+        );
     }
 }

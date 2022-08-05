@@ -24,7 +24,9 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     height: 1000,
+    minHeight: 800,
     width: 1400,
+    minWidth: 500,
     webPreferences: {
       devTools: nodeEnv.dev,
       preload: path.join(__dirname, './preload.bundle.js'),
@@ -34,7 +36,10 @@ function createWindow() {
   mainWindow.removeMenu();
 
   mainWindow.webContents.on('will-navigate', (e: Event, n: string) => {
-    if (n.includes('localhost/#access_token')) {
+    if (n.includes('localhost')) {
+      if (!n.includes('#access_token=')) {
+        return;
+      }
       const splits = n.split('#access_token=')[1].split('&id_token=');
       const accessToken = splits[0];
       const idToken = splits[1].split('&scope=')[0];
