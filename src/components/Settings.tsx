@@ -76,7 +76,7 @@ export class Settings extends React.Component<unknown, {
                 </Stack>
 
                 <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
-                    <Link to="/oauthTwitch">
+                    <Link to="/oauthTwitch" style={{ textDecoration: 'none' }}>
                         <Button variant="contained">
                             Authenticate to Twitch
                         </Button>
