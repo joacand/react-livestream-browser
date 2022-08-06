@@ -21,3 +21,7 @@ In terminal #2:
 ## Deployment
 
 `npm run prod` followed by `npm run build:{os}`
+
+## Template
+
+Project template based on [Devtography's Electron React template](https://github.com/Devtography/electron-react-typescript-webpack-boilerplate).
