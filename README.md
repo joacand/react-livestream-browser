@@ -4,11 +4,13 @@ A livestream browser client for watching streams with a third party streaming ut
 
 Currently only integrated with Twitch.TV, but additions for Youtube should be possible as well.
 
-Written in TypeScript and React and built with Electron.
+Developed with TypeScript and React and built on Electron.
 
-## Screenshot
+## Screenshots
 
-![alt tag](https://i.imgur.com/ablZcfY.png "Example usage of the application")
+![alt tag](https://i.imgur.com/gPOiy0O.png "Example usage of the application")
+
+![alt tag](https://i.imgur.com/dyZFtff.png "Example usage of the application settings")
 
 ## Running development
 
