@@ -1,9 +1,11 @@
 import child_process = require('child_process');
 import * as path from 'path';
 import * as nodeEnv from '_utils/node-env';
+import { setupTitlebar, attachTitlebarToWindow } from 'custom-electron-titlebar/main';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { BrowserWindow, app, ipcMain } from 'electron';
 import { ElectronJSONSettingsStoreMain } from 'electron-json-settings-store';
+
 
 const configSchema = {
   twitchClientId: { default: '', type: 'string' },
@@ -20,6 +22,8 @@ console.log(`Config location: ${config.getCompleteFilePath}`);
 
 let mainWindow: Electron.BrowserWindow | undefined;
 
+setupTitlebar();
+
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -27,6 +31,7 @@ function createWindow() {
     minHeight: 800,
     width: 1400,
     minWidth: 500,
+    titleBarStyle: 'hidden',
     webPreferences: {
       devTools: nodeEnv.dev,
       preload: path.join(__dirname, './preload.bundle.js'),
@@ -59,6 +64,8 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = undefined;
   });
+
+  attachTitlebarToWindow(mainWindow);
 }
 
 app.whenReady().then(() => {

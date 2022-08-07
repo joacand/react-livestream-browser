@@ -43,37 +43,40 @@ export class Settings extends React.Component<unknown, {
     }
     render(): React.ReactNode {
         return (
-            <div style={{ width: 'auto', height: '100%' }}>
-                <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
-                    <TextField
-                        required
-                        id="outlined-required"
-                        label="Twitch client ID"
-                        defaultValue={this.state.twitchClientId}
-                        onChange={this.handleChangeClientId}
-                    />
-                    <TextField
-                        required
-                        id="outlined-required"
-                        label="Twitch user ID (numbers)"
-                        defaultValue={this.state.twitchUserId}
-                        onChange={this.handleChangeUserId}
-                    />
-                    <TextField
-                        required
-                        id="outlined-required"
-                        label="Twitch user name"
-                        defaultValue={this.state.twitchUserName}
-                        onChange={this.handleChangeUserName}
-                    />
-                    <TextField
-                        required
-                        id="outlined-required"
-                        label="Streamlink path"
-                        defaultValue={this.state.streamUtilityPath}
-                        onChange={this.handleChangeStreamUtilityPath}
-                    />
-                </Stack>
+            <div style={{ width: '100%', height: '100%', display: 'flex', flexFlow: 'column' }}>
+                <h1>Application settings</h1>
+                <div style={{ width: 'auto', height: '100%' }}>
+                    <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Twitch client ID"
+                            defaultValue={this.state.twitchClientId}
+                            onChange={this.handleChangeClientId}
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Twitch user ID (numbers)"
+                            defaultValue={this.state.twitchUserId}
+                            onChange={this.handleChangeUserId}
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Twitch user name"
+                            defaultValue={this.state.twitchUserName}
+                            onChange={this.handleChangeUserName}
+                        />
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label="Streamlink path"
+                            defaultValue={this.state.streamUtilityPath}
+                            onChange={this.handleChangeStreamUtilityPath}
+                        />
+                    </Stack>
+                </div>
 
                 <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
                     <Link to="/oauthTwitch" style={{ textDecoration: 'none' }}>

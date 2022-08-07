@@ -1,11 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ipcRenderer } from 'electron';
 import { ElectronJSONSettingsStoreRenderer } from 'electron-json-settings-store';
-import { Config } from '../core/Config'
+import { Config } from '../core/Config';
 
 const config = new ElectronJSONSettingsStoreRenderer();
 config.initSync();
-console.log(config.getAll);
 
 const validChannels: string[] = ['openProcess'];
 
