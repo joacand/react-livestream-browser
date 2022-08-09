@@ -43,9 +43,9 @@ export class Settings extends React.Component<unknown, {
     }
     render(): React.ReactNode {
         return (
-            <div style={{ width: '100%', height: '100%', display: 'flex', flexFlow: 'column' }}>
+            <div className="container_root">
                 <h1>Application settings</h1>
-                <div style={{ width: 'auto', height: '100%' }}>
+                <div style={{ height: '100%' }}>
                     <Stack direction="column" alignItems="left" gap={1} style={{ paddingBottom: '10px' }}>
                         <TextField
                             required

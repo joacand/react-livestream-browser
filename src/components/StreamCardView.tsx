@@ -69,9 +69,9 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
 
     render(): React.ReactNode {
         return (
-            <div style={{ width: '100%', height: '100%', display: 'flex', flexFlow: 'column' }}>
-                <div style={{ marginBottom: '10px', height: '100%', backgroundColor: '#383838' }}>
-                    <Grid container rowSpacing={1} columnSpacing={1} style={{ height: 'auto', padding: '10px' }}>
+            <div className="container_root">
+                <div className="scroll_enabled card_grid">
+                    <Grid className="card_grid_internal" container rowSpacing={1} columnSpacing={1}>
                         {Array.from(this.state.channels).map((x, index) => (
                             <Grid item key={index}>
                                 <Card sx={{ minWidth: 345, maxWidth: 345, minHeight: 290 }}>

@@ -17,9 +17,9 @@ export class OAuthTwitch extends React.Component {
 
     render(): React.ReactNode {
         return (
-            <div style={{ width: 'auto', height: '100%' }}>
+            <div style={{ height: '100%' }}>
                 Authentication
             </div>
-        )
+        );
     }
 }

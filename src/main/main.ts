@@ -27,10 +27,10 @@ setupTitlebar();
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    height: 1000,
-    minHeight: 800,
-    width: 1400,
-    minWidth: 500,
+    height: 730,
+    minHeight: 400,
+    width: 1120,
+    minWidth: 400,
     titleBarStyle: 'hidden',
     webPreferences: {
       devTools: nodeEnv.dev,
