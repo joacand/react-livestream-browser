@@ -6,7 +6,6 @@ import { setupTitlebar, attachTitlebarToWindow } from 'custom-electron-titlebar/
 import { BrowserWindow, app, ipcMain } from 'electron';
 import { ElectronJSONSettingsStoreMain } from 'electron-json-settings-store';
 
-
 const configSchema = {
   twitchClientId: { default: '', type: 'string' },
   twitchAccessToken: { default: '', type: 'string' },
@@ -25,11 +24,10 @@ let mainWindow: Electron.BrowserWindow | undefined;
 setupTitlebar();
 
 function createWindow() {
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     height: 730,
     minHeight: 400,
-    width: 1120,
+    width: 1130,
     minWidth: 400,
     titleBarStyle: 'hidden',
     webPreferences: {
@@ -89,9 +87,9 @@ ipcMain.on(
   'openProcess',
   (e: Event, cmd: string): void => {
     console.log(cmd);
-    const exec = child_process.exec;
+    const { exec } = child_process;
     exec(cmd, (error: child_process.ExecException) => {
-      console.log(error);
+      console.error(error);
     }).unref();
   }
 );

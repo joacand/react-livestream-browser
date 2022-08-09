@@ -21,7 +21,6 @@ export class Settings extends React.Component<unknown, {
             twitchUserName: config.twitchUserName,
             streamUtilityPath: config.streamUtilityPath,
         };
-        this.saveChanges = this.saveChanges.bind(this);
     }
 
     handleChangeClientId = (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ twitchClientId: event.currentTarget.value }); };
@@ -31,17 +30,25 @@ export class Settings extends React.Component<unknown, {
 
     saveChanges(): void {
         try {
-            config.twitchClientId = this.state.twitchClientId;
-            config.twitchUserId = this.state.twitchUserId;
-            config.twitchUserName = this.state.twitchUserName;
-            config.streamUtilityPath = this.state.streamUtilityPath;
+            const {
+                twitchClientId, twitchUserId, twitchUserName, streamUtilityPath,
+            } = this.state;
+
+            config.twitchClientId = twitchClientId;
+            config.twitchUserId = twitchUserId;
+            config.twitchUserName = twitchUserName;
+            config.streamUtilityPath = streamUtilityPath;
 
             saveConfig(config);
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
     render(): React.ReactNode {
+        const {
+            twitchClientId, twitchUserId, twitchUserName, streamUtilityPath,
+        } = this.state;
+
         return (
             <div className="container_root">
                 <h1>Application settings</h1>
@@ -51,28 +58,28 @@ export class Settings extends React.Component<unknown, {
                             required
                             id="outlined-required"
                             label="Twitch client ID"
-                            defaultValue={this.state.twitchClientId}
+                            defaultValue={twitchClientId}
                             onChange={this.handleChangeClientId}
                         />
                         <TextField
                             required
                             id="outlined-required"
                             label="Twitch user ID (numbers)"
-                            defaultValue={this.state.twitchUserId}
+                            defaultValue={twitchUserId}
                             onChange={this.handleChangeUserId}
                         />
                         <TextField
                             required
                             id="outlined-required"
                             label="Twitch user name"
-                            defaultValue={this.state.twitchUserName}
+                            defaultValue={twitchUserName}
                             onChange={this.handleChangeUserName}
                         />
                         <TextField
                             required
                             id="outlined-required"
                             label="Streamlink path"
-                            defaultValue={this.state.streamUtilityPath}
+                            defaultValue={streamUtilityPath}
                             onChange={this.handleChangeStreamUtilityPath}
                         />
                     </Stack>
@@ -85,7 +92,7 @@ export class Settings extends React.Component<unknown, {
                         </Button>
                     </Link>
                     <Stack direction="row" alignItems="center" gap={1}>
-                        <Link to="/" onClick={this.saveChanges}>
+                        <Link to="/" onClick={() => this.saveChanges()}>
                             <Button variant="contained">
                                 <SaveIcon />
                             </Button>
@@ -98,6 +105,6 @@ export class Settings extends React.Component<unknown, {
                     </Stack>
                 </Stack>
             </div>
-        )
+        );
     }
 }

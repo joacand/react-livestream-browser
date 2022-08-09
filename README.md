@@ -8,9 +8,9 @@ Developed with TypeScript and React and built on Electron.
 
 ## Screenshots
 
-![alt tag](https://i.imgur.com/gPOiy0O.png "Example usage of the application")
+![alt tag](https://i.imgur.com/0p7ZUGJ.png "Example usage of the application")
 
-![alt tag](https://i.imgur.com/dyZFtff.png "Example usage of the application settings")
+![alt tag](https://i.imgur.com/jWiyYYU.png "Example usage of the application settings")
 
 ## Running development
 

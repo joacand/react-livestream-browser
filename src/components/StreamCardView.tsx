@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {
@@ -10,8 +11,16 @@ import { ProcessService } from '../services/ProcessService';
 import { TwitchService } from '../services/TwitchService';
 
 export class StreamCardView extends React.Component<unknown, { channels: LiveChannel[], quality: number }> {
-    readonly processService: ProcessService;
+    static calculateRuntime(startedAt: string): string {
+        const elapsedTime = new Date().getTime().valueOf() - +(Date.parse(startedAt).valueOf());
+        const hoursDecimal = elapsedTime / (1000 * 60 * 60);
+        const runTime = new Date(0, 0);
+        runTime.setMinutes(+hoursDecimal * 60);
+        return `${runTime.getHours()}h ${runTime.getMinutes()}m`;
+    }
+
     readonly twitchService: TwitchService;
+    readonly processService: ProcessService;
     openEnabled = true;
 
     constructor(props: unknown) {
@@ -19,10 +28,6 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
 
         this.processService = new ProcessService(window.ipcAPI.api.getConfig);
         this.twitchService = new TwitchService(window.ipcAPI.api.getConfig);
-
-        this.refreshLivestreams = this.refreshLivestreams.bind(this);
-        this.onCardClick = this.onCardClick.bind(this);
-        this.qualityChanged = this.qualityChanged.bind(this);
 
         this.state = {
             channels: [],
@@ -35,11 +40,12 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
     }
 
     onCardClick(channel: LiveChannel) {
+        const { quality } = this.state;
         if (this.openEnabled) {
             this.openEnabled = false;
             console.log(`Sending command to open stream channel: ${channel.url}`);
-            this.processService.openStream(channel.url, this.state.quality);
-            setTimeout(() => this.openEnabled = true, 2000);
+            this.processService.openStream(channel.url, quality);
+            setTimeout(() => { this.openEnabled = true; }, 2000);
         }
     }
 
@@ -55,25 +61,21 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
         });
     }
 
-    calculateRuntime(startedAt: string): string {
-        const elapsedTime = new Date().getTime().valueOf() - +(Date.parse(startedAt).valueOf());
-        const hoursDecimal = elapsedTime / (1000 * 60 * 60);
-        const runTime = new Date(0, 0);
-        runTime.setMinutes(+hoursDecimal * 60);
-        return `${runTime.getHours()}h ${runTime.getMinutes()}m`;
-    }
-
     qualityChanged(e: SelectChangeEvent<number>, _n: React.ReactNode): void {
         this.setState({ quality: e.target.value as number });
     }
 
     render(): React.ReactNode {
+        const {
+            channels, quality,
+        } = this.state;
+
         return (
             <div className="container_root">
                 <div className="scroll_enabled card_grid">
                     <Grid className="card_grid_internal" container rowSpacing={1} columnSpacing={1}>
-                        {Array.from(this.state.channels).map((x, index) => (
-                            <Grid item key={index}>
+                        {Array.from(channels).map((x) => (
+                            <Grid item key={x.channelId}>
                                 <Card sx={{ minWidth: 345, maxWidth: 345, minHeight: 290 }}>
                                     <CardActionArea onClick={() => this.onCardClick(x)}>
                                         <CardMedia
@@ -88,9 +90,8 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
                                                 {x.title}<br />
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {x.game}, {x.viewers} viewers
+                                                {x.game}, {x.viewers} viewers<br />
+                                                Started {StreamCardView.calculateRuntime(x.runTime)} ago
                                             </Typography>
                                         </CardContent>
                                     </CardActionArea>
@@ -101,7 +102,7 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
                 </div>
 
                 <Stack direction="row" alignItems="center" gap={1}>
-                    <Button variant="contained" onClick={this.refreshLivestreams}>
+                    <Button variant="contained" onClick={() => this.refreshLivestreams()}>
                         <RefreshIcon />
                     </Button>
                     <Link to="/settings">
@@ -113,10 +114,11 @@ export class StreamCardView extends React.Component<unknown, { channels: LiveCha
                         <InputLabel>Quality</InputLabel>
                         <Select
                             id="quality-select"
-                            value={this.state.quality}
+                            value={quality}
                             label="Quality"
                             defaultValue={1}
-                            onChange={this.qualityChanged}>
+                            onChange={(e, c) => this.qualityChanged(e, c)}
+                        >
                             <MenuItem value={1}>High</MenuItem>
                             <MenuItem value={2}>Medium</MenuItem>
                             <MenuItem value={3}>Low</MenuItem>
